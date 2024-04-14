@@ -1,44 +1,37 @@
+using WebApplication1.Animals;
+using WebApplication1.Visits;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IAnimalsService, AnimalService>();
+builder.Services.AddScoped<IVisitsService, VisitService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.MapGet("/animals", (IAnimalsService service) => service.GetAnimals());
+app.MapGet("/animals/{id}", (int id, IAnimalsService service) => 
+    service.GetAnimalById(id) is Animal animal ? Results.Ok(animal) : Results.NotFound());
+app.MapPost("/animals", (Animal animal, IAnimalsService service) => 
+    Results.Created($"/animals/{animal.Id}", service.AddAnimal(animal)));
+app.MapPut("/animals/{id}", (int id, Animal updateAnimal, IAnimalsService service) => 
+    service.UpdateAnimal(id, updateAnimal) is Animal animal ? Results.Ok(animal) : Results.NotFound());
+app.MapDelete("/animals/{id}", (int id, IAnimalsService service) => {
+    service.DeleteAnimal(id);
+    return Results.Ok();
+});
+app.MapGet("/animals/{animalId}/visits", (int animalId, IVisitsService service) => 
+    service.GetVisitsForAnimal(animalId));
+app.MapPost("/visits", (Visit visit, IVisitsService service) => 
+    Results.Created($"/visits/{visit.Id}", service.AddVisit(visit)));
+
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
-
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
