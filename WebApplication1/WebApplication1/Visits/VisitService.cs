@@ -4,7 +4,7 @@ namespace WebApplication1.Visits;
 
 public class VisitService : IVisitsService
 {
-    private List<Visit> _visits = new List<Visit>
+    private static List<Visit> _visits = new List<Visit>
     {
         new Visit { Id = 1, AnimalId = 1, Date = DateTime.Parse("2023-04-01T14:00:00"), Description = "Annual vaccination", Price = 250.00m },
         new Visit { Id = 2, AnimalId = 2, Date = DateTime.Parse("2023-04-02T15:30:00"), Description = "General checkup", Price = 200.00m },

@@ -2,7 +2,7 @@
 
 public class AnimalService : IAnimalsService
 {
-    private List<Animal> _animals = new List<Animal>
+    private static List<Animal> _animals = new List<Animal>
     {
         new Animal { Id = 1, Name = "Max", Category = "Dog", Weight = 24.5, FurColor = "Black" },
         new Animal { Id = 2, Name = "Whiskers", Category = "Cat", Weight = 5.3, FurColor = "White" },
