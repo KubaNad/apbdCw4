@@ -10,7 +10,7 @@ public class AnimalService : IAnimalsService
         new Animal { Id = 4, Name = "Shadow", Category = "Cat", Weight = 4.2, FurColor = "Gray" }
     };
 
-    private int _nextId = 5;
+    private static int _nextId = 5;
 
     public IEnumerable<Animal> GetAnimals()
     {

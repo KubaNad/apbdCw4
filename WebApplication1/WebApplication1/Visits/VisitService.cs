@@ -13,7 +13,7 @@ public class VisitService : IVisitsService
         new Visit { Id = 5, AnimalId = 1, Date = DateTime.Parse("2023-04-05T09:20:00"), Description = "Follow-up for vaccination", Price = 150.00m }
     };
 
-    private int _nextId = 6;
+    private static int _nextId = 6;
 
     public IEnumerable<Visit> GetVisitsForAnimal(int animalId)
     {
